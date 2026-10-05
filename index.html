@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chicago Daily Leads — New Business &amp; Permit Feed</title>
+  <meta name="description" content="Weekday morning email of every new City of Chicago business license and building permit. $49/month. Cancel anytime." />
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --card: #ffffff;
+      --ink: #1a1f2e;
+      --muted: #5b6578;
+      --line: #e3e7ef;
+      --accent: #0b5fff;
+      --accent-dark: #0847c7;
+      --gold: #c9a227;
+      --soft: #eef3ff;
+      --ok: #0f7a3c;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.55;
+      font-size: 17px;
+    }
+    a { color: var(--accent); }
+    .wrap { max-width: 880px; margin: 0 auto; padding: 0 20px; }
+    header {
+      background: linear-gradient(160deg, #0b1b3a 0%, #12306b 55%, #1a4a9e 100%);
+      color: #fff;
+      padding: 48px 0 56px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: 28px;
+      font-size: 15px;
+      opacity: 0.95;
+    }
+    .brand-mark {
+      width: 28px; height: 28px; border-radius: 7px;
+      background: #ffd700; color: #0b1b3a;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 14px;
+    }
+    h1 {
+      font-size: clamp(1.75rem, 4vw, 2.35rem);
+      line-height: 1.2;
+      margin: 0 0 14px;
+      font-weight: 750;
+      letter-spacing: -0.02em;
+    }
+    .sub {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      max-width: 620px;
+      margin: 0 0 28px;
+    }
+    .cta-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+    .btn {
+      display: inline-block;
+      background: #ffd700;
+      color: #0b1b3a;
+      font-weight: 700;
+      text-decoration: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .btn:hover { filter: brightness(0.97); }
+    .btn-ghost {
+      background: transparent;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.35);
+      padding: 11px 18px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+    }
+    .meta-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+    .pill {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+    }
+    section { padding: 48px 0; }
+    h2 {
+      font-size: 1.45rem;
+      margin: 0 0 8px;
+      letter-spacing: -0.015em;
+    }
+    .lede { color: var(--muted); margin: 0 0 24px; max-width: 640px; }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 640px) {
+      .grid-2 { grid-template-columns: 1fr; }
+      header { padding: 36px 0 44px; }
+      section { padding: 36px 0; }
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 18px 18px 16px;
+      box-shadow: 0 1px 2px rgba(16,24,40,0.04);
+    }
+    .card h3 {
+      margin: 0 0 6px;
+      font-size: 1.05rem;
+    }
+    .card p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+    .icon {
+      width: 34px; height: 34px; border-radius: 8px;
+      background: var(--soft); color: var(--accent);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 16px; margin-bottom: 10px; font-weight: 700;
+    }
+    .sample-head {
+      display: flex; justify-content: space-between; align-items: baseline;
+      gap: 12px; flex-wrap: wrap; margin-bottom: 14px;
+    }
+    .badge {
+      background: #e8f6ee; color: var(--ok);
+      font-size: 12px; font-weight: 700;
+      padding: 4px 10px; border-radius: 999px;
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .lead {
+      border-top: 1px solid var(--line);
+      padding: 14px 0;
+    }
+    .lead:first-of-type { border-top: none; padding-top: 4px; }
+    .lead-name { font-weight: 700; margin: 0 0 2px; }
+    .lead-meta { color: var(--muted); font-size: 0.9rem; margin: 0 0 4px; }
+    .lead-desc { margin: 0; font-size: 0.95rem; }
+    .tag {
+      display: inline-block;
+      background: var(--soft);
+      color: var(--accent-dark);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-right: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .price-box {
+      background: var(--card);
+      border: 2px solid var(--accent);
+      border-radius: 14px;
+      padding: 28px 24px;
+      text-align: center;
+      max-width: 420px;
+      margin: 0 auto;
+      box-shadow: 0 8px 24px rgba(11,95,255,0.08);
+    }
+    .price {
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin: 8px 0 4px;
+    }
+    .price span { font-size: 1.1rem; font-weight: 600; color: var(--muted); }
+    .price-note { color: var(--muted); margin: 0 0 18px; font-size: 0.95rem; }
+    .checklist { list-style: none; padding: 0; margin: 0 0 22px; text-align: left; }
+    .checklist li {
+      padding: 7px 0 7px 28px;
+      position: relative;
+      border-bottom: 1px solid var(--line);
+      font-size: 0.95rem;
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist li::before {
+      content: "✓";
+      position: absolute; left: 0; color: var(--ok); font-weight: 800;
+    }
+    #paypal-button-container-P-0WS24600N84251135NLB4G4Y {
+      max-width: 360px;
+      margin: 0 auto 12px;
+      min-height: 55px;
+    }
+    .thanks {
+      display: none;
+      background: #e8f6ee;
+      color: var(--ok);
+      border: 1px solid #b7e0c6;
+      border-radius: 10px;
+      padding: 16px;
+      margin: 14px auto 0;
+      max-width: 360px;
+      font-weight: 600;
+      text-align: left;
+      font-size: 0.95rem;
+      line-height: 1.45;
+    }
+    .thanks .sub-id {
+      display: block;
+      margin-top: 8px;
+      font-weight: 500;
+      color: var(--muted);
+      font-size: 0.85rem;
+      word-break: break-all;
+    }
+    .fallback-link {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin: 0;
+    }
+    .fallback-link a { font-weight: 600; }
+    .faq details {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+    .faq summary {
+      font-weight: 700;
+      cursor: pointer;
+      list-style: none;
+    }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary::after {
+      content: "+";
+      float: right;
+      color: var(--muted);
+      font-weight: 400;
+    }
+    .faq details[open] summary::after { content: "−"; }
+    .faq details p { margin: 10px 0 0; color: var(--muted); font-size: 0.95rem; }
+    footer {
+      background: #0b1b3a;
+      color: rgba(255,255,255,0.85);
+      padding: 40px 0 28px;
+      font-size: 0.92rem;
+    }
+    footer a { color: #ffd700; }
+    footer h2 { color: #fff; font-size: 1.15rem; }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+    @media (max-width: 640px) {
+      .contact-grid { grid-template-columns: 1fr; }
+    }
+    .disclaimer {
+      border-top: 1px solid rgba(255,255,255,0.15);
+      padding-top: 18px;
+      font-size: 0.78rem;
+      line-height: 1.5;
+      color: rgba(255,255,255,0.55);
+    }
+    .divider { height: 1px; background: var(--line); border: 0; margin: 0; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="brand"><span class="brand-mark">CD</span> Chicago Daily Leads</div>
+      <h1>Every new Chicago business &amp; building permit — in your inbox by 8&nbsp;AM&nbsp;CT</h1>
+      <p class="sub">A weekday morning email listing the City of Chicago’s newest business licenses and building permits from the previous business day. Built for people who sell to businesses that are just opening or remodeling.</p>
+      <div class="cta-row">
+        <a class="btn" href="#subscribe">Subscribe — $49/month</a>
+        <a class="btn-ghost" href="#sample">See a real sample</a>
+      </div>
+      <div class="meta-pills">
+        <span class="pill">Cancel anytime</span>
+        <span class="pill">Weekday mornings ~8 AM CT</span>
+        <span class="pill">City of Chicago open data</span>
+      </div>
+    </div>
+  </header>
+
+  <section id="who">
+    <div class="wrap">
+      <h2>Who it’s for</h2>
+      <p class="lede">If you need to reach businesses the day they file — not weeks later — this feed is built for you.</p>
+      <div class="grid-2">
+        <div class="card">
+          <div class="icon">🪧</div>
+          <h3>Sign shops</h3>
+          <p>Catch illuminated wall signs, blade signs, and channel-letter installs as soon as the permit posts.</p>
+        </div>
+        <div class="card">
+          <div class="icon">🛡️</div>
+          <h3>Commercial insurers</h3>
+          <p>New storefronts, offices, and build-outs mean new policies — reach them before competitors do.</p>
+        </div>
+        <div class="card">
+          <div class="icon">💳</div>
+          <h3>Merchant / POS reps</h3>
+          <p>New retail and restaurant licenses are warm payment-processing leads on day one.</p>
+        </div>
+        <div class="card">
+          <div class="icon">✨</div>
+          <h3>Commercial cleaners</h3>
+          <p>Tenant build-outs and new openings need janitorial and post-construction cleaning.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <section id="sample">
+    <div class="wrap">
+      <div class="sample-head">
+        <div>
+          <h2>Real sample — Friday, Oct 2, 2026</h2>
+          <p class="lede" style="margin-bottom:0">That day the City issued 29 new business licenses and 104 building permits ($10.8M reported work). A few highlights:</p>
+        </div>
+        <span class="badge">Live city data</span>
+      </div>
+      <div class="card">
+        <div class="lead">
+          <span class="tag">License</span>
+          <p class="lead-name">ChaTraMue (Thaitreasure888 LLC)</p>
+          <p class="lead-meta">1616 N Damen Ave B, 60647 · West Town</p>
+          <p class="lead-desc">Preparation and sale of coffee and/or drinks · Retail Food Establishment</p>
+        </div>
+        <div class="lead">
+          <span class="tag">License</span>
+          <p class="lead-name">Augusta Market 16 (Augusta Market 16 LLC)</p>
+          <p class="lead-meta">3605 W Augusta Blvd, 60651 · Humboldt Park</p>
+          <p class="lead-desc">Retail sales of general merchandise &amp; perishable foods · Retail Food Establishment</p>
+        </div>
+        <div class="lead">
+          <span class="tag">License</span>
+          <p class="lead-name">Sal’s On Tap (1645 Jackson LLC)</p>
+          <p class="lead-meta">1645 W Jackson Blvd, 60612 · Near West Side</p>
+          <p class="lead-desc">Consumption of liquor on premises · Incidental Activity</p>
+        </div>
+        <div class="lead">
+          <span class="tag">License</span>
+          <p class="lead-name">87th Quick Stop (87th Quick Stop Inc.)</p>
+          <p class="lead-meta">1833–1835 W 87th St, 60620 · Auburn Gresham</p>
+          <p class="lead-desc">Retail food establishment · general merchandise &amp; perishable foods</p>
+        </div>
+        <div class="lead">
+          <span class="tag">License</span>
+          <p class="lead-name">L’Occitane en Provence (L’Occitane, Inc.)</p>
+          <p class="lead-meta">900 N Michigan Ave, 60611 · Near North Side</p>
+          <p class="lead-desc">Retail sales of general merchandise · Limited Business License</p>
+        </div>
+        <div class="lead">
+          <span class="tag">Permit · $1.3M</span>
+          <p class="lead-name">1846 N Damen Ave · Logan Square</p>
+          <p class="lead-meta">GC: Promised Land Development · Owner: 1844-46 Damen LLC</p>
+          <p class="lead-desc">Erect a 4-story, 3-unit masonry building with ground-floor office space</p>
+        </div>
+        <div class="lead">
+          <span class="tag">Permit · $770K</span>
+          <p class="lead-name">150 N Wacker Dr · Loop</p>
+          <p class="lead-meta">GC: Bear Construction · Owner: 150 N Wacker LLC</p>
+          <p class="lead-desc">Interior alterations to 20th-floor office suite 2020</p>
+        </div>
+        <div class="lead">
+          <span class="tag">Sign · $5,000</span>
+          <p class="lead-name">6601 N Avondale Ave · Edison Park</p>
+          <p class="lead-meta">Sign contractor: First Ad Signs Inc</p>
+          <p class="lead-desc">Install one on-premise illuminated channel-letter wall sign</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <section id="what">
+    <div class="wrap">
+      <h2>What you get</h2>
+      <p class="lede">Every weekday morning, a clear email of the previous business day’s filings — no portal digging, no spreadsheets to build.</p>
+      <div class="grid-2">
+        <div class="card">
+          <h3>New business licenses</h3>
+          <p>Name, address, neighborhood, what the business does, and license type.</p>
+        </div>
+        <div class="card">
+          <h3>Building &amp; sign permits</h3>
+          <p>Address, work description, reported value, and contractor / owner when available.</p>
+        </div>
+        <div class="card">
+          <h3>Weekday cadence</h3>
+          <p>Arrives around 8 AM Central on business days so you can call the same morning.</p>
+        </div>
+        <div class="card">
+          <h3>Plain-English format</h3>
+          <p>Skim in two minutes. Full CSV available on request for your CRM.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="subscribe" style="background:#fff; border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+    <div class="wrap">
+      <div class="price-box">
+        <div class="badge" style="display:inline-block; margin-bottom:6px;">Simple pricing</div>
+        <div class="price">$49 <span>/ month</span></div>
+        <p class="price-note">Cancel anytime. No setup fee. No annual lock-in.</p>
+        <ul class="checklist">
+          <li>Weekday email of new Chicago licenses &amp; permits</li>
+          <li>Business name, address, activity / work description</li>
+          <li>Permit values and contractors when listed</li>
+          <li>Direct support from Richard</li>
+        </ul>
+        <div id="paypal-button-container-P-0WS24600N84251135NLB4G4Y"></div>
+        <div id="thanks" class="thanks" role="status" aria-live="polite"></div>
+        <p class="fallback-link" style="margin-top:14px">
+          Having trouble?
+          <a href="https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=P-0WS24600N84251135NLB4G4Y" target="_blank" rel="noopener noreferrer">Subscribe on PayPal</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq" id="faq">
+    <div class="wrap">
+      <h2>FAQ</h2>
+      <p class="lede">Straight answers before you subscribe.</p>
+      <details>
+        <summary>Can I cancel anytime?</summary>
+        <p>Yes. Cancel from PayPal or email Richard — no questions asked, no leftover months locked in.</p>
+      </details>
+      <details>
+        <summary>When does the email arrive?</summary>
+        <p>Around 8 AM Central Time on weekday mornings, covering the previous business day’s City of Chicago filings.</p>
+      </details>
+      <details>
+        <summary>Where does the data come from?</summary>
+        <p>Official City of Chicago open data: Business Licenses and Building Permits on the City Data Portal. See the disclaimer in the footer.</p>
+      </details>
+      <details>
+        <summary>Is this the same as the free city portal?</summary>
+        <p>The source data is public. You pay for the daily packaging — filtered, readable, and in your inbox every weekday so you don’t have to dig the portal yourself.</p>
+      </details>
+      <details>
+        <summary>Who should I contact with questions?</summary>
+        <p>Richard Sanches — ricksanches5567@gmail.com or (407) 881-1506.</p>
+      </details>
+    </div>
+  </section>
+
+  <footer id="contact">
+    <div class="wrap">
+      <div class="contact-grid">
+        <div>
+          <h2>Contact</h2>
+          <p style="margin:8px 0 4px"><strong>Richard Sanches</strong></p>
+          <p style="margin:4px 0"><a href="mailto:ricksanches5567@gmail.com">ricksanches5567@gmail.com</a></p>
+          <p style="margin:4px 0"><a href="tel:+14078811506">(407) 881-1506</a></p>
+          <p style="margin:4px 0; color:rgba(255,255,255,0.7)">3726 Vineland Rd, WGJVD<br />Orlando, FL 32811-6438</p>
+        </div>
+        <div>
+          <h2>Chicago Daily Leads</h2>
+          <p style="margin:8px 0; color:rgba(255,255,255,0.75)">Weekday new-business &amp; permit email for Chicago. $49/month. Cancel anytime.</p>
+          <p style="margin:8px 0"><a href="#subscribe">Subscribe</a> · <a href="#sample">Sample</a> · <a href="#faq">FAQ</a></p>
+        </div>
+      </div>
+      <div class="disclaimer">
+        <strong>City of Chicago data disclaimer.</strong>
+        This site provides applications using data that has been modified for use from its original source, www.cityofchicago.org, the official website of the City of Chicago. The City of Chicago makes no claims as to the content, accuracy, timeliness, or completeness of any of the data provided at this site. The data provided at this site is subject to change at any time. It is understood that the data provided at this site is being used at one’s own risk.
+        <br /><br />
+        © 2026 Chicago Daily Leads · Richard Sanches
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://www.paypal.com/sdk/js?client-id=AUSpagTfR2AwwslurjZeu1rZhqyLMpINLFLg2IEwjhBG9YVarN_J0g_y6m37oTOsj7fFFxVQcbZWB7P9&vault=true&intent=subscription" data-sdk-integration-source="button-factory"></script>
+  <script>
+    paypal.Buttons({
+      style: {
+        shape: "rect",
+        color: "gold",
+        layout: "vertical",
+        label: "subscribe"
+      },
+      createSubscription: function (data, actions) {
+        return actions.subscription.create({
+          plan_id: "P-0WS24600N84251135NLB4G4Y"
+        });
+      },
+      onApprove: function (data) {
+        var el = document.getElementById("thanks");
+        if (!el) return;
+        var sid = (data && data.subscriptionID) ? data.subscriptionID : "";
+        el.innerHTML =
+          "You\u2019re subscribed! Your first list arrives next weekday morning. Questions: ricksanches5567@gmail.com" +
+          (sid ? '<span class="sub-id">Subscription ID: ' + sid + "</span>" : "");
+        el.style.display = "block";
+        el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+    }).render("#paypal-button-container-P-0WS24600N84251135NLB4G4Y");
+  </script>
+</body>
+</html>
